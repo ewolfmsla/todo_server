@@ -32,22 +32,30 @@ defmodule Todo.Database do
 
   @impl GenServer
   def handle_cast({:save, key, term}, state) do
-    key
-    |> file_name()
-    |> File.write!(:erlang.term_to_binary(term))
+    data = term.entries |> Map.values()
+
+    spawn(fn ->
+      key
+      |> file_name()
+      |> File.write!(:erlang.term_to_binary(data))
+    end)
 
     {:noreply, state}
   end
 
   @impl GenServer
-  def handle_call({:get, key}, _caller, state) do
-    data =
-      case File.read(file_name(key)) do
-        {:ok, contents} -> :erlang.binary_to_term(contents)
-        {:error, _} -> []
-      end
+  def handle_call({:get, key}, caller, state) do
+    spawn(fn ->
+      data =
+        case File.read(file_name(key)) do
+          {:ok, contents} -> :erlang.binary_to_term(contents)
+          {:error, _} -> []
+        end
 
-    {:reply, data, state}
+      GenServer.reply(caller, data)
+    end)
+
+    {:noreply, state}
   end
 
   defp file_name(key), do: Path.join(@db_folder, Atom.to_string(key))
