@@ -7,7 +7,7 @@ defmodule Util do
   def entry(date \\ ~D[2022-03-23], title), do: %TodoItem{date: date, title: title}
 end
 
-{:ok, pid} = Cache.start()
+# {:ok, pid} = Cache.start()
 
-sally = Cache.server_process(pid, :sally)
-eric = Cache.server_process(pid, :eric)
+# sally = Cache.server_process(pid, :sally)
+# eric = Cache.server_process(pid, :eric)

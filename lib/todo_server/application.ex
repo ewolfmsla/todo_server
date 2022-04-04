@@ -7,14 +7,16 @@ defmodule TodoServer.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      # Starts a worker by calling: TodoServer.Worker.start_link(arg)
-      # {TodoServer.Worker, arg}
-    ]
+    children = children()
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: TodoServer.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  defp children() do
+    case Application.get_env(:todo_server, :env) do
+      :test -> []
+      _ -> [{Todo.Cache, nil}]
+    end
   end
 end

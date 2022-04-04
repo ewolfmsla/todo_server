@@ -61,8 +61,8 @@ defmodule TodoServerTest do
   end
 
   test "all/1 return :error tuple for key not found" do
-    assert {:error, reason} = TodoServer.all(:bad_key)
-    assert "no todos found for key :bad_key" = reason
+    assert {:error, reason} = TodoServer.all(:not_a_pid)
+    assert "invalid pid: :not_a_pid" = reason
   end
 
   test "get_by_id/1", %{pid: pid} do

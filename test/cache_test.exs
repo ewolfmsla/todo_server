@@ -17,10 +17,10 @@ defmodule Todo.CacheTest do
     DatabaseMock
     |> expect(:get, 2, fn _ -> [] end)
 
-    {:ok, pid} = Todo.Cache.start()
+    Todo.Cache.start_link(nil)
 
-    foo_pid = Todo.Cache.server_process(pid, :foo)
-    bar_pid = Todo.Cache.server_process(pid, :bar)
+    foo_pid = Todo.Cache.server_process(:foo)
+    bar_pid = Todo.Cache.server_process(:bar)
 
     assert foo_pid != bar_pid
   end
@@ -36,10 +36,10 @@ defmodule Todo.CacheTest do
     DatabaseMock
     |> expect(:get, 2, fn _ -> [] end)
 
-    {:ok, pid} = Todo.Cache.start()
+    Todo.Cache.start_link(nil)
 
-    foo_pid = Todo.Cache.server_process(pid, :foo)
-    bar_pid = Todo.Cache.server_process(pid, :bar)
+    foo_pid = Todo.Cache.server_process(:foo)
+    bar_pid = Todo.Cache.server_process(:bar)
 
     DatabaseMock
     |> expect(:save, 2, fn key, term ->

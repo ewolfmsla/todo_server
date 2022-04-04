@@ -11,8 +11,7 @@ defmodule TodoServer do
 
   @spec start(any) :: :ignore | {:error, any} | {:ok, pid}
   def start(name) do
-    saved_entries = datastore().get(name)
-    GenServer.start_link(__MODULE__, %{name: name, todos: TodoList.new(saved_entries)})
+    GenServer.start_link(__MODULE__, name)
   end
 
   def add_entry(pid, entry) do
@@ -29,13 +28,22 @@ defmodule TodoServer do
 
   @spec all(pid()) :: any()
   def all(pid) when is_pid(pid), do: GenServer.call(pid, :all)
-  def all(key), do: {:error, "no todos found for key #{inspect(key)}"}
+  def all(key), do: {:error, "invalid pid: #{inspect(key)}"}
 
   # server
 
   @impl true
-  def init(state) do
-    {:ok, state}
+  def init(name) do
+    todos =
+      case datastore().get(name) do
+        %Todo.List{} = todos ->
+          Map.values(todos.entries)
+
+        _ ->
+          []
+      end
+
+    {:ok, %{name: name, todos: TodoList.new(todos)}}
   end
 
   @impl true
