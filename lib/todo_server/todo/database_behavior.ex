@@ -5,7 +5,7 @@ defmodule Todo.DatabaseBehavior do
 
   alias Todo.Item, as: TodoItem
 
-  @callback start() :: {:ok, pid()}
+  @callback start_link(any()) :: :ignore | {:error, any()} | {:ok, pid()}
   @callback save(String.t() | atom(), TodoItem.todo_item()) :: atom()
   @callback get(String.t() | atom()) :: list(TodoItem.todo_item())
 end

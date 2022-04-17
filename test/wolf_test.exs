@@ -23,4 +23,8 @@ defmodule WolfTest do
 
     assert {:ok, "mock return"} == Park.start()
   end
+
+  test "foo" do
+    assert :bike == Wolf.bike()
+  end
 end

@@ -15,8 +15,15 @@ defmodule TodoServer.Application do
 
   defp children() do
     case Application.get_env(:todo_server, :env) do
-      :test -> []
-      _ -> [{Todo.Cache, nil}]
+      :test ->
+        []
+
+      _ ->
+        [
+          {Todo.ProcessRegistry, nil},
+          {Todo.Cache, nil},
+          {Todo.Database, nil}
+        ]
     end
   end
 end

@@ -11,4 +11,6 @@ defmodule Wolf do
   end
 
   defp massage_sound(sound), do: "#{sound}!!!"
+
+  def bike(), do: :bike
 end
